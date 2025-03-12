@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const Controls = ({
   autoplay,
   setAutoplay,
@@ -17,10 +19,6 @@ const Controls = ({
       return !prev;
     });
   };
-
-  const [code, setCode] = useState(() => {
-    return localStorage.getItem("savedCode") || "";
-  });
 
   useEffect(() => {
     if (autosave) {

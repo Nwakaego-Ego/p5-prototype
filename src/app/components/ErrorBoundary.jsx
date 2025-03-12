@@ -19,7 +19,15 @@ const ErrorBoundary = ({ children }) => {
   }, []);
 
   if (hasError) {
-    return <h2>Something went wrong. Try modifying your sketch.</h2>;
+    return (
+      <div
+        style={{ color: "red", padding: "10px", backgroundColor: "#ffdddd" }}
+      >
+        <h2>⚠️ Error:</h2>
+        <p>{errorMessage}</p>
+        <p>Try modifying your sketch.</p>
+      </div>
+    );
   }
 
   return <>{children}</>;

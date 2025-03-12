@@ -24,7 +24,11 @@ const Page = () => {
           code={code}
           setCode={setCode}
         />
-        <Preview code={autoplay ? code : ""} setHasError={setHasError} />
+        {/* <Preview code={autoplay ? code : ""} /> */}
+        <Preview
+          code={autoplay ? code : localStorage.getItem("savedCode") || code}
+          setHasError={setHasError}
+        />
       </div>
     </ErrorBoundary>
   );
