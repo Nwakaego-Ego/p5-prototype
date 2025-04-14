@@ -1,89 +1,73 @@
 "use client";
 import { useState, useEffect } from "react";
-import Editor from "./components/editor";
-import Preview from "./components/preview";
-import Controls from "./components/controls/controls";
+import Editor from "./components/Editor";
+import Preview from "./components/Preview";
+import Controls from "./components/controls/Controls";
+import EmbedOptions from "./components/EmbedOptions";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { generateEmbedCode } from "./utils/generateEmbedCode";
+import EmbedGenerator from "./components/EmbedGenerator";
+import SketchTypeSelector from "./components/SketchTypeSelector";
+// import SoundPlayer from "./components/SoundPlayer";
+
+import dynamic from "next/dynamic";
+
+const SoundPlayer = dynamic(() => import("./components/SoundPlayer"), {
+  ssr: false,
+});
 
 const Page = () => {
   const [code, setCode] = useState("");
   const [playMode, setPlayMode] = useState("Stop");
   const [shouldRun, setShouldRun] = useState(false);
-  const [savedCode, setSavedCode] = useState("");
+  const [embedMode, setEmbedMode] = useState("iframe");
+  const [sketchType, setSketchType] = useState("2D");
+  const [editable, setEditable] = useState(true);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedCode = localStorage.getItem("savedCode") || "";
-      setSavedCode(storedCode);
+      setCode(storedCode);
     }
   }, []);
 
   const handlePlayMode = (mode) => {
     setPlayMode(mode);
-    if (mode === "Play" || mode === "Autoplay") {
-      setShouldRun(true);
-    } else if (mode === "Stop") {
-      setShouldRun(false);
-      localStorage.setItem("savedCode", code);
-    }
+    setShouldRun(mode === "Play" || mode === "Autoplay");
   };
 
   return (
     <ErrorBoundary>
-      <div>
-        <h1 className="text-red-600 p-2">p5.js Sketch Embedder</h1>
-        <Editor code={code} setCode={setCode} />
-        <Controls
-          playMode={playMode}
-          setPlayMode={handlePlayMode}
-          code={code}
+      <div className="p-4">
+        <h1 className="text-red-600 text-2xl mb-4">p5.js Sketch Embedder</h1>
+        {/* <SketchTypeSelector
+          sketchType={sketchType}
+          setSketchType={setSketchType}
+        /> */}
+        <SoundPlayer audioFile="your-audio-file.mp3" />
+        <Editor code={code} setCode={setCode} editable={editable} />
+        <Controls playMode={playMode} setPlayMode={handlePlayMode} />
+        <EmbedOptions embedMode={embedMode} setEmbedMode={setEmbedMode} />
+        <Preview code={shouldRun ? code : ""} embedMode={embedMode} />
+        <EmbedGenerator code={code} editable={editable} />
+        <div className="mt-4">
+          <label className="block mb-2 font-semibold">Editable Code:</label>
+          <input
+            type="checkbox"
+            checked={editable}
+            onChange={() => setEditable(!editable)}
+            className="mr-2"
+          />
+          Enable Editing
+        </div>
+        <textarea
+          readOnly
+          value={generateEmbedCode(code, embedMode)}
+          className="w-full mt-4 p-2 border"
         />
-        {/* <Preview code={shouldRun ? code : savedCode || ""} /> */}
-        <Preview code={shouldRun ? code : ""} />
       </div>
     </ErrorBoundary>
   );
 };
 
 export default Page;
-
-// "use client";
-// import { useState } from "react";
-// import Editor from "./components/editor";
-// import Preview from "./components/preview";
-// import Controls from "./components/controls/controls";
-// import ErrorBoundary from "./components/ErrorBoundary";
-
-// const Page = () => {
-//   const [code, setCode] = useState("");
-//   const [playMode, setPlayMode] = useState("stop");
-//   const [hasError, setHasError] = useState(false);
-//   const [shouldRun, setShouldRun] = useState(false);
-
-//   const handlePlayMode = (mode) => {
-//     setPlayMode(mode);
-//     if (mode === "play" || mode === "autoplay") {
-//       setShouldRun(true);
-//     } else if (mode === "stop") {
-//       setShouldRun(false);
-//       localStorage.setItem("savedCode", code);
-//     }
-//   };
-//   return (
-//     <ErrorBoundary>
-//       <div>
-//         <h1 className="text-red-600 p-2">p5.js Sketch Embedder</h1>
-//         <Editor code={code} setCode={setCode} />
-//         <Controls
-//           playMode={playMode}
-//           setPlayMode={handlePlayMode}
-//           code={code}
-//           setCode={setCode}
-//         />
-//         <Preview code={shouldRun ? code : ""} />
-//       </div>
-//     </ErrorBoundary>
-//   );
-// };
-
-// export default Page;

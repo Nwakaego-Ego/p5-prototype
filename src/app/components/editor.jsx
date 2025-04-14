@@ -1,24 +1,66 @@
-const Editor = ({ code, setCode }) => {
+import { useEffect } from "react";
+
+const Editor = ({ code, setCode, editable }) => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("savedCode") || "";
+      setCode(saved);
+    }
+  }, [setCode]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      localStorage.setItem("savedCode", code);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [code]);
+
   return (
-    <textarea
-      value={code}
-      onChange={(e) => setCode(e.target.value)}
-      placeholder="Write your p5.js code here..."
-      className="mb-5 mt-5 w-full h-48 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-    />
+    <div className="mb-4">
+      <label className="block mb-2 font-semibold">Code Editor:</label>
+      <textarea
+        className="w-full h-60 p-2 border"
+        value={code}
+        onChange={(e) => setCode(e.target.value)}
+        readOnly={!editable}
+      />
+    </div>
   );
 };
 
 export default Editor;
 
-// const Editor = ({ code, setCode }) => {
+// import { use, useEffect } from "react";
+
+// const Editor = ({ code, setCode, editable }) => {
+//   useEffect(() => {
+//     if (typeof window !== "undefined") {
+//       const saveEdits = localStorage.getItem("savedCode") || "";
+//       setCode(saveEdits);
+//     }
+//   });
+
+//   useEffect(() => {
+//     const saveTimeout = setTimeout(() => {
+//       localStorage.setItem("savedCode", code);
+//     }, 1000);
+
+//     return () => {
+//       clearTimeout(saveTimeout);
+//     };
+//   });
+
 //   return (
-//     <textarea
-//       value={code}
-//       onChange={(e) => setCode(e.target.value)}
-//       placeholder="Write your p5.js code here..."
-//       style={{ width: "100%", height: "200px" }}
-//     />
+//     <div className="mb-4">
+//       <label className="block mb-2 font-semibold">Code Editor:</label>
+//       <textarea
+//         className="w-full h-60 p-2 border"
+//         value={code}
+//         onChange={(e) => setCode(e.target.value)}
+//         readOnly={!editable}
+//       />
+//     </div>
 //   );
 // };
 

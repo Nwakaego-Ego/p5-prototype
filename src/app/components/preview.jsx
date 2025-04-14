@@ -1,97 +1,18 @@
-import { useEffect, useRef } from "react";
-
-const Preview = ({ code }) => {
-  const iframeRef = useRef(null);
-
-  useEffect(() => {
-    if (!code.trim()) {
-      if (iframeRef.current) {
-        iframeRef.current.srcdoc = "<html><body></body></html>"; // Clears the preview
-      }
-      return;
-    }
-
-    const sketchHTML = `
-    <html>
-      <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-      </head>
-      <body>
-        <script>
-          ${code}
-        </script>
-      </body>
-    </html>
-  `;
-
-    if (iframeRef.current) {
-      iframeRef.current.srcdoc = sketchHTML;
-    }
-  }, [code]);
-
-  // useEffect(() => {
-  //   if (!code.trim()) return;
-
-  //   const sketchHTML = `
-  //     <html>
-  //       <head>
-  //         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  //       </head>
-  //       <body>
-  //         <script>
-  //           ${code}
-  //         </script>
-  //       </body>
-  //     </html>
-  //   `;
-
-  //   if (iframeRef.current) {
-  //     iframeRef.current.srcdoc = sketchHTML;
-  //   }
-  // }, [code]);
-
+const Preview = ({ code, embedMode }) => {
   return (
-    <iframe
-      ref={iframeRef}
-      style={{ width: "100%", height: "300px", border: "1px solid black" }}
-    />
+    <div className="border p-4 mt-4">
+      <h2 className="text-lg font-semibold mb-2">Preview:</h2>
+      {embedMode === "iframe" ? (
+        <iframe
+          srcDoc={`<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script><script>${code}</script>`}
+          width="800"
+          height="400"
+        ></iframe>
+      ) : (
+        <div id="mySketch"></div>
+      )}
+    </div>
   );
 };
 
 export default Preview;
-
-// import { useEffect, useRef } from "react";
-
-// const Preview = ({ code }) => {
-//   const iframeRef = useRef(null);
-
-//   useEffect(() => {
-//     if (!code.trim()) return;
-
-//     const sketchHTML = `
-//       <html>
-//         <head>
-//           <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-//         </head>
-//         <body>
-//           <script>
-//             ${code}
-//           </script>
-//         </body>
-//       </html>
-//     `;
-
-//     if (iframeRef.current) {
-//       iframeRef.current.srcdoc = sketchHTML;
-//     }
-//   }, [code]);
-
-//   return (
-//     <iframe
-//       ref={iframeRef}
-//       style={{ width: "100%", height: "300px", border: "1px solid black" }}
-//     />
-//   );
-// };
-
-// export default Preview;
