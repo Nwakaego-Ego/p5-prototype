@@ -1,8 +1,8 @@
-const Preview = ({ code, embedMode }) => {
+const Preview = ({ code, mode }) => {
   return (
     <div className="border p-4 mt-4">
       <h2 className="text-lg font-semibold mb-2">Preview:</h2>
-      {embedMode === "iframe" ? (
+      {mode === "iframe" ? (
         <iframe
           srcDoc={`<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script><script>${code}</script>`}
           width="800"

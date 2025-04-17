@@ -8,6 +8,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { generateEmbedCode } from "./utils/generateEmbedCode";
 import EmbedGenerator from "./components/EmbedGenerator";
 import SketchTypeSelector from "./components/SketchTypeSelector";
+
 // import SoundPlayer from "./components/SoundPlayer";
 
 import dynamic from "next/dynamic";
@@ -20,7 +21,7 @@ const Page = () => {
   const [code, setCode] = useState("");
   const [playMode, setPlayMode] = useState("Stop");
   const [shouldRun, setShouldRun] = useState(false);
-  const [embedMode, setEmbedMode] = useState("iframe");
+  const [mode, setMode] = useState("iframe");
   const [sketchType, setSketchType] = useState("2D");
   const [editable, setEditable] = useState(true);
 
@@ -31,9 +32,9 @@ const Page = () => {
     }
   }, []);
 
-  const handlePlayMode = (mode) => {
-    setPlayMode(mode);
-    setShouldRun(mode === "Play" || mode === "Autoplay");
+  const handlePlayMode = (userMode: "Play" | "Stop" | "Autoplay") => {
+    setPlayMode(userMode);
+    setShouldRun(userMode === "Play" || userMode === "Autoplay");
   };
 
   return (
@@ -47,8 +48,8 @@ const Page = () => {
         <SoundPlayer audioFile="your-audio-file.mp3" />
         <Editor code={code} setCode={setCode} editable={editable} />
         <Controls playMode={playMode} setPlayMode={handlePlayMode} />
-        <EmbedOptions embedMode={embedMode} setEmbedMode={setEmbedMode} />
-        <Preview code={shouldRun ? code : ""} embedMode={embedMode} />
+        <EmbedOptions mode={mode} setMode={setMode} />
+        <Preview code={shouldRun ? code : ""} mode={mode} />
         <EmbedGenerator code={code} editable={editable} />
         <div className="mt-4">
           <label className="block mb-2 font-semibold">Editable Code:</label>
@@ -62,7 +63,7 @@ const Page = () => {
         </div>
         <textarea
           readOnly
-          value={generateEmbedCode(code, embedMode)}
+          value={generateEmbedCode(code, mode)}
           className="w-full mt-4 p-2 border"
         />
       </div>
